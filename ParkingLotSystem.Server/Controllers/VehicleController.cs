@@ -46,6 +46,9 @@ namespace ParkingLotSystem.Server.Controllers
             return CreatedAtAction(nameof(GetActiveVehicles), new { id = vehicle.Id }, vehicle);
         }
 
+      
+
+
         // Araç çıkışını kaydetme
         [HttpPut("{id}/exit")]
         public async Task<IActionResult> UpdateExitTime(int id)
