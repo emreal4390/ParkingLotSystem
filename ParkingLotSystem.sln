@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkingLotSystem.Server", "ParkingLotSystem.Server\ParkingLotSystem.Server.csproj", "{F00E8FA8-B5AB-45D4-8EE6-1080D4649568}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "parkinglotsystem.client", "parkinglotsystem.client\parkinglotsystem.client.esproj", "{CE09689B-6F39-48BD-9700-52B926478CF1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F00E8FA8-B5AB-45D4-8EE6-1080D4649568}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F00E8FA8-B5AB-45D4-8EE6-1080D4649568}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F00E8FA8-B5AB-45D4-8EE6-1080D4649568}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F00E8FA8-B5AB-45D4-8EE6-1080D4649568}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE09689B-6F39-48BD-9700-52B926478CF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE09689B-6F39-48BD-9700-52B926478CF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE09689B-6F39-48BD-9700-52B926478CF1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{CE09689B-6F39-48BD-9700-52B926478CF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE09689B-6F39-48BD-9700-52B926478CF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE09689B-6F39-48BD-9700-52B926478CF1}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
