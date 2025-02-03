@@ -17,9 +17,11 @@ function App() {
         <div style={backgroundStyle}>
             <Router>
                 <div className="navbar">
+                    <div className="navbar-menu">
                     <Link to="/">Home</Link>
                     <Link to="/current">Current Vehicles</Link>
                     <Link to="/records">All Records</Link>
+                    </div>
                 </div>
                 <Routes>
                     <Route path="/" element={<Home />} />

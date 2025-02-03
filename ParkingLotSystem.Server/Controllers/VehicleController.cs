@@ -40,7 +40,7 @@ namespace ParkingLotSystem.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Vehicle>> AddVehicle(Vehicle vehicle)
         {
-            vehicle.EntryTime = DateTime.UtcNow;
+            vehicle.EntryTime = DateTime.UtcNow.AddHours(3); ;
             _context.Vehicles.Add(vehicle);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetActiveVehicles), new { id = vehicle.Id }, vehicle);
@@ -56,9 +56,47 @@ namespace ParkingLotSystem.Server.Controllers
             var vehicle = await _context.Vehicles.FindAsync(id);
             if (vehicle == null) return NotFound();
 
-            vehicle.ExitTime = DateTime.UtcNow;
+            vehicle.ExitTime = DateTime.UtcNow.AddHours(3); ;
             await _context.SaveChangesAsync();
             return NoContent();
         }
+        // Dinamik filtreleme özelliği
+        [HttpGet("history/filter")]
+        public IActionResult GetFilteredVehicleHistory(
+    [FromQuery] string? plate,
+    [FromQuery] string? ownerName,
+    [FromQuery] string? apartmentNo,
+    [FromQuery] DateTime? dateFrom,
+    [FromQuery] DateTime? dateTo,
+    [FromQuery] int? minDuration,
+    [FromQuery] int? maxDuration)
+        {
+            var vehicles = _context.Vehicles.AsQueryable();
+
+            if (!string.IsNullOrEmpty(plate))
+                vehicles = vehicles.Where(v => v.LicensePlate.Contains(plate));
+
+            if (!string.IsNullOrEmpty(ownerName))
+                vehicles = vehicles.Where(v => v.OwnerName.Contains(ownerName));
+
+            if (!string.IsNullOrEmpty(apartmentNo))
+                vehicles = vehicles.Where(v => v.ApartmentNumber.Contains(apartmentNo));
+
+            if (dateFrom.HasValue && dateTo.HasValue)
+                vehicles = vehicles.Where(v => v.EntryTime >= dateFrom && v.ExitTime <= dateTo);
+
+            if (minDuration.HasValue)
+                vehicles = vehicles.Where(v => v.ExitTime != null &&
+                    (EF.Functions.DateDiffMinute(v.EntryTime, v.ExitTime) >= minDuration));
+
+            if (maxDuration.HasValue)
+                vehicles = vehicles.Where(v => v.ExitTime != null &&
+                    (EF.Functions.DateDiffMinute(v.EntryTime, v.ExitTime) <= maxDuration));
+
+            return Ok(vehicles.ToList());
+        }
+
+
     }
+
 }

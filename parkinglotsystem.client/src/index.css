@@ -1,4 +1,4 @@
-/* Global Styles */
+
 body {
     background: url("/public/images/background.jpg") no-repeat center center fixed;
     background-size: cover;
@@ -9,30 +9,46 @@ body {
     height: 100vh;
 }
 
-/* Navbar */
+/* Navbar  */
 .navbar {
-    width: 100%;
-    background: rgba(0, 0, 0, 0.8); /* Hafif saydam siyah */
-    color: #FFF;
-    padding: 15px 20px;
+    background-color: rgba(0, 0, 0, 0.8); 
+    padding: 15px 20px; /* Dikey ve yatay boþluk */
     display: flex;
+    justify-content: flex-start; /* Linkleri sola hizalar */
     align-items: center;
-    justify-content: space-between;
+    position: fixed; 
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Hafif gölge efekti */
 }
 
+    /* Navbar Ýçindeki Linkler */
     .navbar a {
-        color: #FFCC00; /* Sarý */
+        color: #FFD700; 
         text-decoration: none;
-        margin-right: 20px;
         font-size: 18px;
-        transition: color 0.3s ease;
+        font-weight: bold;
+        margin-right: 20px; 
+        padding: 10px 15px; 
+        transition: background 0.3s, transform 0.2s;
+        border-radius: 5px;
     }
 
+        /* Hover Efekti */
         .navbar a:hover {
-            color: #FFF;
+            background-color: rgba(255, 215, 0, 0.2); /* Hafif sarý hover efekti */
+            transform: scale(1.05); /* Hafif büyüme efekti */
         }
 
-/* Fullscreen content area (navbar height 60px örneðin) */
+        /* Aktif Sayfa Ýçin */
+        .navbar a.active {
+            background-color: #FFD700; /* Sarý arka plan */
+            color: black;
+        }
+
+
 .fullscreen {
     width: 100%;
     min-height: calc(100vh - 60px);
@@ -41,12 +57,12 @@ body {
     backdrop-filter: blur(5px);
 }
 
-/* Table Styles */
+/* Table  */
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    background: rgba(255, 255, 255, 0.9); /* Beyaz ve hafif þeffaf */
+    background: rgba(255, 255, 255, 0.9); 
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -58,28 +74,29 @@ th, td {
 }
 
 th {
-    background: #FFCC00; /* Sarý */
+    background: #FFCC00; 
     color: #000;
     font-size: 16px;
 }
 
 tr:nth-child(even) {
-    background: #F7F7F7; /* Açýk gri */
+    background: #F7F7F7; 
 }
 
 tr:hover {
-    background: #FFE680; /* Sarýya yakýn bir ton */
+    background: #FFE680; 
 }
 
 
-/* Form Styles */
+/* Form */
 .form-container {
     background: rgba(255, 255, 255, 0.85);
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    max-width: 1200px; /* Ýçeriði geniþlet */
+    max-width: 1300px;
     margin: auto;
+    
 }
 
     .form-container label {
@@ -96,7 +113,7 @@ tr:hover {
         border-radius: 5px;
     }
 
-/* Button Styles */
+/* Button  */
 button {
     padding: 10px 20px;
     font-size: 16px;
@@ -137,3 +154,56 @@ button {
         background-color: #0056B3;
         transform: scale(1.05);
     }
+
+.filter-container {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+    /* Filtreleme Alanlarý */
+    .filter-container input,
+    .filter-container select {
+        padding: 12px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        width: 130px; /* Daha uygun geniþlik */
+        box-sizing: border-box; /* Ýçerik taþmasýný önler */
+    }
+
+
+/* Tarih Seçici */
+.react-datepicker-wrapper {
+    width: 220px; 
+}
+
+/* Filtreleme Butonu */
+.filter-container button {
+    background-color: #FFCC00; 
+    color: black;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+    .filter-container button:hover {
+        background-color: #E6B800; 
+    }
+
+
+

@@ -13,7 +13,7 @@ const CurrentVehicles = () => {
 
     return (
         <div>
-            <h2>Current Vehicles</h2>
+            
             <table>
                 <thead>
                     <tr>
