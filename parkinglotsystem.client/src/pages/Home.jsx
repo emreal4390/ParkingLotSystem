@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "../index.css"; // CSS dosyasýný içe aktarýyoruz
+import "../index.css";
 
 const Home = () => {
     const [licensePlate, setLicensePlate] = useState("");
@@ -13,14 +13,12 @@ const Home = () => {
         fetchVehicles();
     }, []);
 
-    // Güncel otoparktaki araçlarý getir
     const fetchVehicles = () => {
         axios.get("https://localhost:7172/api/vehicle/active")
             .then(response => setVehicles(response.data))
             .catch(error => console.error("Failed to load vehicles:", error));
     };
 
-    // Rastgele plaka oluþtur
     const generateRandomPlate = () => {
         const randomNumbers1 = Math.floor(10 + Math.random() * 90);
         const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -29,13 +27,11 @@ const Home = () => {
         return `${randomNumbers1} ${randomLetters} ${randomNumbers2}`;
     };
 
-    // "GÝRÝÞ" butonuna basýldýðýnda formu aç ve rastgele plaka üret
     const handleEntryClick = () => {
         setLicensePlate(generateRandomPlate());
         setShowForm(true);
     };
 
-    // Yeni aracý API'ye kaydet
     const handleSubmit = () => {
         if (!ownerName || !apartmentNumber) {
             alert("Please enter name and apartment number.");
@@ -56,39 +52,69 @@ const Home = () => {
                 setShowForm(false);
                 setOwnerName("");
                 setApartmentNumber("");
-                fetchVehicles(); // Güncel listeyi yenile
+                fetchVehicles();
             })
             .catch(error => console.error("Failed to add vehicle:", error));
     };
 
-    // "ÇIKIÞ" butonuna basýlýnca rastgele bir aracý çýkýþ yaptýr
+    // EXIT butonu: rastgele bir aracýn çýkýþýný gerçekleþtirir.
     const handleExitClick = () => {
         if (vehicles.length === 0) {
             alert("No vehicles in the parking lot.");
             return;
         }
-
         const randomVehicle = vehicles[Math.floor(Math.random() * vehicles.length)];
-
         axios.put(`https://localhost:7172/api/vehicle/${randomVehicle.id}/exit`)
             .then(() => {
                 alert(`Vehicle ${randomVehicle.licensePlate} exited successfully!`);
-                fetchVehicles(); // Güncel listeyi yenile
+                fetchVehicles();
             })
             .catch(error => console.error("Exit failed:", error));
     };
 
     return (
-        <div className="container">
-            <h2>Vehicle Management</h2>
-
-            {/* Giriþ ve Çýkýþ Butonlarý */}
-            <div className="button-container">
-                <button className="btn btn-success" onClick={handleEntryClick}>ENTRY</button>
-                <button className="btn btn-danger" onClick={handleExitClick}>EXIT</button>
+        <div style={{ marginTop: "80px", textAlign: "center" }}>
+            <h1 style={{ color: "#FFCC00", fontSize: "28px", marginBottom: "20px" }}>Parking Lot Management</h1>
+            <div style={{ marginBottom: "30px" }}>
+                <button
+                    className="btn btn-success"
+                    style={{
+                        backgroundColor: "#4CAF50",
+                        color: "white",
+                        padding: "10px 20px",
+                        fontSize: "18px",
+                        border: "none",
+                        borderRadius: "8px",
+                        marginRight: "10px",
+                        cursor: "pointer",
+                        transition: "transform 0.3s ease, background-color 0.3s ease",
+                    }}
+                    onClick={handleEntryClick}
+                    onMouseEnter={(e) => (e.target.style.backgroundColor = "#45a049")}
+                    onMouseLeave={(e) => (e.target.style.backgroundColor = "#4CAF50")}
+                >
+                    ENTRY
+                </button>
+                <button
+                    className="btn btn-danger"
+                    style={{
+                        backgroundColor: "#DC3545",
+                        color: "white",
+                        padding: "10px 20px",
+                        fontSize: "18px",
+                        border: "none",
+                        borderRadius: "8px",
+                        cursor: "pointer",
+                        transition: "transform 0.3s ease, background-color 0.3s ease",
+                    }}
+                    onClick={handleExitClick}
+                    onMouseEnter={(e) => (e.target.style.backgroundColor = "#C82333")}
+                    onMouseLeave={(e) => (e.target.style.backgroundColor = "#DC3545")}
+                >
+                    EXIT
+                </button>
             </div>
 
-            {/* Araç Giriþ Formu */}
             {showForm && (
                 <div className="form-container">
                     <h3>Vehicle Information</h3>

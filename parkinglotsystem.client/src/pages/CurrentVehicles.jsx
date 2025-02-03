@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import "../index.css";
 
 const CurrentVehicles = () => {
     const [vehicles, setVehicles] = useState([]);
@@ -11,7 +12,7 @@ const CurrentVehicles = () => {
     }, []);
 
     return (
-        <div className="container">
+        <div>
             <h2>Current Vehicles</h2>
             <table>
                 <thead>
@@ -24,7 +25,7 @@ const CurrentVehicles = () => {
                 </thead>
                 <tbody>
                     {vehicles.length > 0 ? (
-                        vehicles.map((vehicle) => (
+                        vehicles.map(vehicle => (
                             <tr key={vehicle.id}>
                                 <td>{vehicle.licensePlate}</td>
                                 <td>{vehicle.ownerName}</td>

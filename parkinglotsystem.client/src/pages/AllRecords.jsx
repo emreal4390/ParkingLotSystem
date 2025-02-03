@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import "../index.css";
 
 const AllRecords = () => {
-    const [allRecords, setAllRecords] = useState([]);
+    const [records, setRecords] = useState([]);
 
     useEffect(() => {
         axios.get("https://localhost:7172/api/vehicle/history")
-            .then(response => setAllRecords(response.data))
+            .then(response => setRecords(response.data))
             .catch(error => console.error("Failed to load records:", error));
     }, []);
 
     return (
-        <div className="container">
+        <div>
             <h2>All Records</h2>
             <table>
                 <thead>
@@ -25,8 +26,8 @@ const AllRecords = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {allRecords.length > 0 ? (
-                        allRecords.map((record) => (
+                    {records.length > 0 ? (
+                        records.map(record => (
                             <tr key={record.id}>
                                 <td>{record.licensePlate}</td>
                                 <td>{record.ownerName}</td>
