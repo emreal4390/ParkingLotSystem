@@ -5,23 +5,28 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
+    font-variant-ligatures: none;
+    unicode-bidi: isolate;
     background: linear-gradient(to right, #f0f0f0, #e8d9c4);
     height: 100vh;
+}
+* {
+    unicode-bidi: plaintext;
 }
 
 /* Navbar  */
 .navbar {
     background-color: rgba(0, 0, 0, 0.8); 
-    padding: 15px 20px; /* Dikey ve yatay boþluk */
+    padding: 15px 20px; 
     display: flex;
-    justify-content: flex-start; /* Linkleri sola hizalar */
+    justify-content: flex-start; 
     align-items: center;
     position: fixed; 
     width: 100%;
     top: 0;
     left: 0;
     z-index: 1000;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Hafif gölge efekti */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
 }
 
     /* Navbar Ýçindeki Linkler */
@@ -38,13 +43,13 @@ body {
 
         /* Hover Efekti */
         .navbar a:hover {
-            background-color: rgba(255, 215, 0, 0.2); /* Hafif sarý hover efekti */
-            transform: scale(1.05); /* Hafif büyüme efekti */
+            background-color: rgba(255, 215, 0, 0.2); 
+            transform: scale(1.05); 
         }
 
-        /* Aktif Sayfa Ýçin */
+       
         .navbar a.active {
-            background-color: #FFD700; /* Sarý arka plan */
+            background-color: #FFD700; 
             color: black;
         }
 
@@ -179,8 +184,8 @@ button {
         font-size: 16px;
         border: 1px solid #ddd;
         border-radius: 5px;
-        width: 130px; /* Daha uygun geniþlik */
-        box-sizing: border-box; /* Ýçerik taþmasýný önler */
+        width: 130px; 
+        box-sizing: border-box; 
     }
 
 

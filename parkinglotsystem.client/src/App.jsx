@@ -2,7 +2,17 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import CurrentVehicles from "./pages/CurrentVehicles.jsx";
 import AllRecords from "./pages/AllRecords.jsx";
-import "./index.css"; // CSS dosyasýný içe aktarýyoruz
+import "./index.css";
+
+
+const setUTF8Encoding = () => {
+    const meta = document.createElement("meta");
+    meta.setAttribute("charset", "UTF-8");
+    document.head.appendChild(meta);
+};
+
+
+setUTF8Encoding();
 
 function App() {
 
@@ -18,9 +28,9 @@ function App() {
             <Router>
                 <div className="navbar">
                     <div className="navbar-menu">
-                    <Link to="/">Home</Link>
-                    <Link to="/current">Current Vehicles</Link>
-                    <Link to="/records">All Records</Link>
+                    <Link to="/">Anasayfa</Link>
+                    <Link to="/current">Icerdeki Araclar</Link>
+                    <Link to="/records">Tum Kayitlar</Link>
                     </div>
                 </div>
                 <Routes>

@@ -17,10 +17,10 @@ const CurrentVehicles = () => {
             <table>
                 <thead>
                     <tr>
-                        <th>License Plate</th>
-                        <th>Owner</th>
-                        <th>Apartment</th>
-                        <th>Entry Time</th>
+                        <th>Plaka</th>
+                        <th>Isim</th>
+                        <th>DaireNo</th>
+                        <th>Giris Zamani</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,7 +35,7 @@ const CurrentVehicles = () => {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="4">No vehicles in parking.</td>
+                            <td colSpan="4">Otoparkta suan arac yok.</td>
                         </tr>
                     )}
                 </tbody>

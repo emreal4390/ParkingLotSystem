@@ -62,22 +62,22 @@ const AllRecords = () => {
         <div className="all-records">
             {/* Filtreleme Alaný */}
             <div className="filter-container">
-                <input type="text" placeholder="Search by Plate" value={plate} onChange={(e) => setPlate(e.target.value)} />
-                <input type="text" placeholder="Search by Owner Name" value={ownerName} onChange={(e) => setOwnerName(e.target.value)} />
-                <input type="text" placeholder="Search by Apartment No" value={apartmentNo} onChange={(e) => setApartmentNo(e.target.value)} />
-                <DatePicker selected={dateFrom} onChange={(date) => setDateFrom(date)} placeholderText="From Date" />
-                <DatePicker selected={dateTo} onChange={(date) => setDateTo(date)} placeholderText="To Date" />
+                <input type="text" placeholder="Plaka" value={plate} onChange={(e) => setPlate(e.target.value)} />
+                <input type="text" placeholder="Isim" value={ownerName} onChange={(e) => setOwnerName(e.target.value)} />
+                <input type="text" placeholder="DaireNo" value={apartmentNo} onChange={(e) => setApartmentNo(e.target.value)} />
+                <DatePicker selected={dateFrom} onChange={(date) => setDateFrom(date)} placeholderText="Tarihten itibaren" />
+                <DatePicker selected={dateTo} onChange={(date) => setDateTo(date)} placeholderText="Bu tarihe kadar" />
 
                 {/* Minimum Duration */}
                 <div>
-                    <input type="number" placeholder="Min Hours" value={minHours} onChange={(e) => setMinHours(e.target.value)} />
-                    <input type="number" placeholder="Min Minutes" value={minMinutes} onChange={(e) => setMinMinutes(e.target.value)} />
+                    <input type="number" placeholder="Minimum Saat" value={minHours} onChange={(e) => setMinHours(e.target.value)} />
+                    <input type="number" placeholder="Minimum Dakika" value={minMinutes} onChange={(e) => setMinMinutes(e.target.value)} />
                 </div>
 
                 {/* Maximum Duration */}
                 <div>
-                    <input type="number" placeholder="Max Hours" value={maxHours} onChange={(e) => setMaxHours(e.target.value)} />
-                    <input type="number" placeholder="Max Minutes" value={maxMinutes} onChange={(e) => setMaxMinutes(e.target.value)} />
+                    <input type="number" placeholder="Maximum Saat" value={maxHours} onChange={(e) => setMaxHours(e.target.value)} />
+                    <input type="number" placeholder="Maximum Dakika" value={maxMinutes} onChange={(e) => setMaxMinutes(e.target.value)} />
                 </div>
 
                 <button onClick={handleFilter}>Filter</button>
@@ -87,12 +87,12 @@ const AllRecords = () => {
             <table>
                 <thead>
                     <tr>
-                        <th>License Plate</th>
-                        <th>Owner Name</th>
-                        <th>Apartment No</th>
-                        <th>Entry Time</th>
-                        <th>Exit Time</th>
-                        <th>Duration</th>
+                        <th>Plaka</th>
+                        <th>Isim</th>
+                        <th>DaireNo</th>
+                        <th>Giris Zamani</th>
+                        <th>Cikis Zamani</th>
+                        <th>Gecirilen Sure</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -102,7 +102,7 @@ const AllRecords = () => {
                             <td>{record.ownerName}</td>
                             <td>{record.apartmentNumber}</td>
                             <td>{new Date(record.entryTime).toLocaleString()}</td>
-                            <td>{record.exitTime ? new Date(record.exitTime).toLocaleString() : "In Parking"}</td>
+                            <td>{record.exitTime ? new Date(record.exitTime).toLocaleString() : "Hala Otoparkta"}</td>
                             <td>{formatDuration(record.entryTime, record.exitTime)}</td>
                         </tr>
                     ))}

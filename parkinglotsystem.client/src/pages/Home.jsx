@@ -34,7 +34,7 @@ const Home = () => {
 
     const handleSubmit = () => {
         if (!ownerName || !apartmentNumber) {
-            alert("Please enter name and apartment number.");
+            alert("Lutfen daire no giriniz.");
             return;
         }
 
@@ -48,13 +48,13 @@ const Home = () => {
 
         axios.post("https://localhost:7172/api/vehicle", newVehicle)
             .then(() => {
-                alert("Vehicle added successfully!");
+                alert("Giris Basariyla Yapildi!");
                 setShowForm(false);
                 setOwnerName("");
                 setApartmentNumber("");
                 fetchVehicles();
             })
-            .catch(error => console.error("Failed to add vehicle:", error));
+            .catch(error => console.error("Giris yapilamadi:", error));
     };
 
     // EXIT butonu: rastgele bir aracýn çýkýþýný gerçekleþtirir.
@@ -66,7 +66,7 @@ const Home = () => {
         const randomVehicle = vehicles[Math.floor(Math.random() * vehicles.length)];
         axios.put(`https://localhost:7172/api/vehicle/${randomVehicle.id}/exit`)
             .then(() => {
-                alert(`Vehicle ${randomVehicle.licensePlate} exited successfully!`);
+                alert(`Vehicle ${randomVehicle.licensePlate} Cikis Yapildi!`);
                 fetchVehicles();
             })
             .catch(error => console.error("Exit failed:", error));
@@ -117,17 +117,17 @@ const Home = () => {
 
             {showForm && (
                 <div className="form-container">
-                    <h3>Vehicle Information</h3>
-                    <label>License Plate:</label>
+                    <h3>Arac Bilgisi</h3>
+                    <label>Plaka:</label>
                     <input type="text" value={licensePlate} disabled />
 
-                    <label>Owner Name:</label>
+                    <label>Isim:</label>
                     <input type="text" value={ownerName} onChange={(e) => setOwnerName(e.target.value)} />
 
-                    <label>Apartment No:</label>
+                    <label>DaireNo:</label>
                     <input type="text" value={apartmentNumber} onChange={(e) => setApartmentNumber(e.target.value)} />
 
-                    <button className="btn btn-primary" onClick={handleSubmit}>Save</button>
+                    <button className="btn btn-primary" onClick={handleSubmit}>Kaydet</button>
                 </div>
             )}
         </div>
