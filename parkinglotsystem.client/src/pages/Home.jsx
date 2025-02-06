@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "../index.css";
 
+
 const Home = () => {
     const [licensePlate, setLicensePlate] = useState("");
     const [ownerName, setOwnerName] = useState("");
@@ -73,46 +74,15 @@ const Home = () => {
     };
 
     return (
-        <div style={{ marginTop: "80px", textAlign: "center" }}>
-            <h1 style={{ color: "#FFCC00", fontSize: "28px", marginBottom: "20px" }}>Parking Lot Management</h1>
-            <div style={{ marginBottom: "30px" }}>
-                <button
-                    className="btn btn-success"
-                    style={{
-                        backgroundColor: "#4CAF50",
-                        color: "white",
-                        padding: "10px 20px",
-                        fontSize: "18px",
-                        border: "none",
-                        borderRadius: "8px",
-                        marginRight: "10px",
-                        cursor: "pointer",
-                        transition: "transform 0.3s ease, background-color 0.3s ease",
-                    }}
-                    onClick={handleEntryClick}
-                    onMouseEnter={(e) => (e.target.style.backgroundColor = "#45a049")}
-                    onMouseLeave={(e) => (e.target.style.backgroundColor = "#4CAF50")}
-                >
-                    ENTRY
-                </button>
-                <button
-                    className="btn btn-danger"
-                    style={{
-                        backgroundColor: "#DC3545",
-                        color: "white",
-                        padding: "10px 20px",
-                        fontSize: "18px",
-                        border: "none",
-                        borderRadius: "8px",
-                        cursor: "pointer",
-                        transition: "transform 0.3s ease, background-color 0.3s ease",
-                    }}
-                    onClick={handleExitClick}
-                    onMouseEnter={(e) => (e.target.style.backgroundColor = "#C82333")}
-                    onMouseLeave={(e) => (e.target.style.backgroundColor = "#DC3545")}
-                >
-                    EXIT
-                </button>
+        <div className="home-container">
+            
+
+            <div className="button-container">
+                {/* ENTRY Butonu */}
+                <button className="button-image entry-button" onClick={handleEntryClick} />
+
+                {/* EXIT Butonu */}
+                <button className="button-image exit-button" onClick={handleExitClick} />
             </div>
 
             {showForm && (

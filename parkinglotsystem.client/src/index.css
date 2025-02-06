@@ -130,6 +130,66 @@ button {
     margin-right: 10px;
 }
 
+/* Butonlarý Ýçeren Konteyner */
+.button-container {
+    position: fixed;
+    bottom:20px;
+    left:20px;
+    display: flex;
+    justify-content: center;
+    gap: 40px; /* Butonlar arasýndaki boþluk */
+    margin-bottom: 30px;
+}
+
+/* Genel Buton Stili */
+.button-image {
+    width: 140px;
+    height: 140px;
+    background-size: contain; /* Fotoðrafýn tam sýðmasýný saðla */
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+    border-radius: 20px; /* Kenarlarý yuvarlak yap */
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    background-color: rgba(255, 255, 255, 0.2); /* Hafif bir arka plan efekti */
+    padding: 10px;
+   
+}
+
+/* ENTRY Butonu Ýçin Arkaplan */
+.entry-button {
+    background-image: url('/public/images/add_Car-removebg-preview.png');
+}
+
+/* EXIT Butonu Ýçin Arkaplan */
+.exit-button {
+    background-image: url('/public/images/remove_car.png');
+}
+
+/* Hover Efekti */
+.button-image:hover {
+    transform: scale(1.1); /* Üzerine gelince büyüt */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Hafif gölge efekti */
+    background-color: #ffc107 /* Hover olduðunda biraz daha belirgin arka plan */
+}
+
+
+
+
+.logout-btn {
+    margin-left: 980px; /* Logout butonunu saða yasla */
+    background-color: red;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+    .logout-btn:hover {
+        background-color: darkred;
+    }
+
 .btn-success {
     background-color: #28A745; /* Yeþil */
     color: white;
@@ -188,6 +248,71 @@ button {
         box-sizing: border-box; 
     }
 
+
+
+/* Genel Login Sayfasý Stil Ayarlarý */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('/public/images/background2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* Login Kutusu */
+.login-box {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 350px;
+}
+
+    /* Baþlýk */
+    .login-box h2 {
+        margin-bottom: 20px;
+        color: #333;
+        font-size: 24px;
+    }
+
+    /* Input Alanlarý */
+    .login-box input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 16px;
+    }
+
+/* Hata Mesajý */
+.error {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* Login Butonu */
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    background: #f4a900;
+    color: #fff;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+    /* Butona Hover Efekti */
+    .login-btn:hover {
+        background: #cc8800;
+    }
 
 /* Tarih Seçici */
 .react-datepicker-wrapper {
