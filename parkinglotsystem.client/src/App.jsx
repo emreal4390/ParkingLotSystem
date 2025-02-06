@@ -11,16 +11,17 @@ function App() {
 
     // Kullanıcının giriş yapıp yapmadığını kontrol et
     useEffect(() => {
-        const role = localStorage.getItem("role");
-        const token = localStorage.getItem("token");
+        const storedRole = localStorage.getItem("role");
+        const storedToken = localStorage.getItem("token");
 
-        if (role && token) {
-            console.log(" Kullanıcı rolü bulundu:", role);
-            setUserRole(role);
+        if (storedRole && storedToken) {
+            console.log("✅ Kullanıcı giriş yapmış:", storedRole);
+            setUserRole(storedRole);
         } else {
-            console.warn(" Kullanıcı giriş yapmamış veya token eksik!");
+            console.warn("⚠️ Kullanıcı giriş yapmamış veya token eksik!");
+            setUserRole(null);
         }
-    }, []);
+    }, [userRole]); // `userRole` değiştiğinde tekrar çalıştır. []);
 
 
     const handleLogout = () => {

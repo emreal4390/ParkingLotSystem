@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import "../index.css"; // CSS dosyanız ile stilleri ekleyelim
@@ -17,19 +17,25 @@ const LoginPage = ({ setUserRole }) => {
                 password
             });
 
-            console.log("Yanıt alındı:", response.data);
+            console.log(" API Yanıtı:", response.data);
 
-            localStorage.setItem("token", response.data.Token);
-            localStorage.setItem("role", response.data.Role);
-            setUserRole(response.data.Role);
-
-            console.log("Kullanıcı rolü:", response.data.Role);
+            if (!response.data || !response.data.token || !response.data.role) {
+                console.error("❌ API'den gelen yanıt eksik:", response.data);
+                return;
+            }
 
             
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("role", response.data.role);
+
+            console.log(" localStorage'a Kaydedildi: Token:", localStorage.getItem("token"));
+            console.log(" localStorage'a Kaydedildi: Role:", localStorage.getItem("role"));
+
+            setUserRole(response.data.role);
             window.location.href = "/";
         } catch (err) {
-            console.error("Giriş hatası:", err.response?.data || err);
-            setError(err.response?.data || "Invalid email or password");
+            console.error(" Giriş hatası:", err.response?.data || err);
+            setError(err.response?.data || "hatalı mail ya da şifre");
         }
     };
 

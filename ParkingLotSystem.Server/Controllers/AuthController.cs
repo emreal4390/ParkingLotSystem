@@ -38,7 +38,8 @@ namespace ParkingLotSystem.Server.Controllers
             }
 
             var token = GenerateJwtToken(user);  //giriş başarılı olursa jwt token oluşturulur. bu token front-end e gönderilerek kullanıcının kimliği doğrulanır.
-            return Ok(new { Token = token, Role = user.Role });
+            return Ok(new { token = token, role = user.Role });
+
         }
 
         //   JWT Token üretme metodu
