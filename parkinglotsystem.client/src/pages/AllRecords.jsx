@@ -1,8 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "../index.css"; // CSS dosyanýzý import edin
+import "../index.css"; 
+
+//const setUTF8Encoding = () => {
+//    const meta = document.createElement("meta");
+//    meta.setAttribute("charset", "UTF-8");
+//    document.head.appendChild(meta);
+//};
+
+//setUTF8Encoding();
 
 const AllRecords = () => {
     const [records, setRecords] = useState([]);
@@ -15,9 +23,52 @@ const AllRecords = () => {
     const [minMinutes, setMinMinutes] = useState("");
     const [maxHours, setMaxHours] = useState("");
     const [maxMinutes, setMaxMinutes] = useState("");
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [userRole, setUserRole] = useState(null);
 
-    const handleFilter = () => {
+    useEffect(() => {
+        fetchRecords(); // Sayfa yüklendiðinde verileri getir
+        setUserRole(localStorage.getItem("role")); // Kullanýcýnýn rolünü al
+    }, []);
+
+    //apiden kayýtlarý çekiyoruz
+    const fetchRecords = async () => {  
+        setLoading(true);
+        setError(null);
+
+        const token = localStorage.getItem("token");  //token kontrolü
+        if (!token) {
+            setError("Yetkilendirme hatasý: Token bulunamadý! Lütfen giriþ yapýn.");
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const response = await axios.get("https://localhost:7172/api/vehicle/history", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            console.log("API'den gelen kayýtlar:", response.data);
+            setRecords(response.data);
+        } catch (err) {
+            console.error("Kayýtlarý çekerken hata oluþtu:", err);
+            setError("Veriler alýnýrken hata oluþtu! Yetkiniz olmayabilir.");
+        } finally {
+            setLoading(false);
+        }
+    };  
+
+    const handleFilter = async () => {
         const filterCriteria = {};
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            setError("Yetkilendirme hatasý: Token bulunamadý! Lütfen giriþ yapýn.");
+            return;
+        }
 
         if (plate.trim()) filterCriteria.plate = plate.trim();
         if (ownerName.trim()) filterCriteria.ownerName = ownerName.trim();
@@ -35,13 +86,32 @@ const AllRecords = () => {
         const query = new URLSearchParams(filterCriteria).toString();
         console.log(`API Request: https://localhost:7172/api/vehicle/history/filter?${query}`);
 
-        axios
-            .get(`https://localhost:7172/api/vehicle/history/filter?${query}`)
-            .then((response) => {
-                console.log("API Response:", response.data);
-                setRecords(response.data);
-            })
-            .catch((error) => console.error("Failed to fetch filtered records:", error));
+        try {
+            const response = await axios.get(`https://localhost:7172/api/vehicle/history/filter?${query}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            console.log("Filtrelenmiþ API yanýtý:", response.data);
+            setRecords(response.data);
+        } catch (err) {
+            console.error("Filtreleme sýrasýnda hata oluþtu:", err);
+            setError("Filtreleme sýrasýnda hata oluþtu! Yetkiniz olmayabilir.");
+        }
+    };
+
+    const handleResetFilters = () => {
+        setPlate("");
+        setOwnerName("");
+        setApartmentNo("");
+        setDateFrom(null);
+        setDateTo(null);
+        setMinHours("");
+        setMinMinutes("");
+        setMaxHours("");
+        setMaxMinutes("");
+        fetchRecords(); // Tüm kayýtlarý yeniden getir
     };
 
     const formatDuration = (entryTime, exitTime) => {
@@ -58,8 +128,34 @@ const AllRecords = () => {
         }
     };
 
+    const handleDelete = async (id) => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            setError("Yetkilendirme hatasý: Token bulunamadý! Lütfen giriþ yapýn.");
+            return;
+        }
+
+        if (!window.confirm("Bu kaydý silmek istediðinize emin misiniz?")) return;
+
+        try {
+            await axios.delete(`https://localhost:7172/api/vehicle/${id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            alert("Kayýt baþarýyla silindi!");
+            fetchRecords(); // Listeyi güncelle
+        } catch (err) {
+            console.error("Silme iþlemi baþarýsýz:", err);
+            setError("Kayýt silinirken hata oluþtu! Yetkiniz olmayabilir.");
+        }
+    };
+
     return (
         <div className="all-records">
+            {/* Hata veya Yükleniyor Mesajý */}
+            {loading && <div className="alert alert-info">Veriler yükleniyor...</div>}
+            {error && <div className="alert alert-error">{error}</div>}
+
             {/* Filtreleme Alaný */}
             <div className="filter-container">
                 <input type="text" placeholder="Plaka" value={plate} onChange={(e) => setPlate(e.target.value)} />
@@ -80,7 +176,8 @@ const AllRecords = () => {
                     <input type="number" placeholder="Maximum Dakika" value={maxMinutes} onChange={(e) => setMaxMinutes(e.target.value)} />
                 </div>
 
-                <button onClick={handleFilter}>Filter</button>
+                <button onClick={handleFilter}>Filtrele</button>
+                <button onClick={handleResetFilters} className="reset-btn">Reset</button>
             </div>
 
             {/* Tablo Alaný */}
@@ -88,11 +185,12 @@ const AllRecords = () => {
                 <thead>
                     <tr>
                         <th>Plaka</th>
-                        <th>Isim</th>
+                        <th>Ýsim</th>
                         <th>DaireNo</th>
                         <th>Giris Zamani</th>
                         <th>Cikis Zamani</th>
                         <th>Gecirilen Sure</th>
+                        {userRole === "SuperAdmin" && <th>Sil</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -104,6 +202,11 @@ const AllRecords = () => {
                             <td>{new Date(record.entryTime).toLocaleString()}</td>
                             <td>{record.exitTime ? new Date(record.exitTime).toLocaleString() : "Hala Otoparkta"}</td>
                             <td>{formatDuration(record.entryTime, record.exitTime)}</td>
+                            {userRole === "SuperAdmin" && (
+                                <td>
+                                    <button className="delete-btn" onClick={() => handleDelete(record.id)}>Sil</button>
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>

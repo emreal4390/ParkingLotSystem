@@ -76,6 +76,7 @@ table {
 th, td {
     padding: 15px;
     text-align: left;
+    font:bold;
 }
 
 th {
@@ -190,35 +191,15 @@ button {
         background-color: darkred;
     }
 
-.btn-success {
-    background-color: #28A745; /* Yeþil */
-    color: white;
+
+.delete-btn {
+    color:white;
+    background-color:red;
+    border-radius:15px;
 }
 
-    .btn-success:hover {
-        background-color: #218838;
-        transform: scale(1.05);
-    }
 
-.btn-danger {
-    background-color: #DC3545; /* Kýrmýzý */
-    color: white;
-}
 
-    .btn-danger:hover {
-        background-color: #C82333;
-        transform: scale(1.05);
-    }
-
-.btn-primary {
-    background-color: #007BFF; /* Mavi */
-    color: white;
-}
-
-    .btn-primary:hover {
-        background-color: #0056B3;
-        transform: scale(1.05);
-    }
 
 .filter-container {
     background: rgba(255, 255, 255, 0.9);
@@ -226,7 +207,7 @@ button {
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     width: 90%;
-    max-width: 1200px;
+    max-width: 1300px;
     margin: 20px auto;
     display: flex;
     flex-wrap: nowrap;

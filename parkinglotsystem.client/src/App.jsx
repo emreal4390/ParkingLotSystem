@@ -15,10 +15,10 @@ function App() {
         const storedToken = localStorage.getItem("token");
 
         if (storedRole && storedToken) {
-            console.log("✅ Kullanıcı giriş yapmış:", storedRole);
+            console.log(" Kullanıcı giriş yapmış:", storedRole);
             setUserRole(storedRole);
         } else {
-            console.warn("⚠️ Kullanıcı giriş yapmamış veya token eksik!");
+            console.warn(" Kullanıcı giriş yapmamış veya token eksik!");
             setUserRole(null);
         }
     }, [userRole]); // `userRole` değiştiğinde tekrar çalıştır. []);

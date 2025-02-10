@@ -45,6 +45,10 @@ export default defineConfig({
             '@': fileURLToPath(new URL('./src', import.meta.url))
         }
     },
+    esbuild: {
+        charset: "utf8"  
+    },
+
     server: {
         proxy: {
             '^/weatherforecast': {
@@ -58,4 +62,5 @@ export default defineConfig({
             cert: fs.readFileSync(certFilePath),
         }
     }
+
 })

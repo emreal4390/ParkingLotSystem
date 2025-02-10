@@ -72,8 +72,7 @@ namespace ParkingLotSystem.Server.Migrations
                     b.Property<DateTime?>("ExitTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsGuest")
-                        .HasColumnType("bit");
+                    
 
                     b.Property<string>("LicensePlate")
                         .IsRequired()

@@ -38,7 +38,7 @@ namespace ParkingLotSystem.Server.Migrations
                     ApartmentNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EntryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ExitTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsGuest = table.Column<bool>(type: "bit", nullable: false)
+                    
                 },
                 constraints: table =>
                 {

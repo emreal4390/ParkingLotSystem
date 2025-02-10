@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import axios from "axios";
 import "../index.css";
 
@@ -9,15 +9,30 @@ const Home = () => {
     const [apartmentNumber, setApartmentNumber] = useState("");
     const [showForm, setShowForm] = useState(false);
     const [vehicles, setVehicles] = useState([]);
+    
 
     useEffect(() => {
         fetchVehicles();
     }, []);
 
+    
     const fetchVehicles = () => {
-        axios.get("https://localhost:7172/api/vehicle/active")
-            .then(response => setVehicles(response.data))
-            .catch(error => console.error("Failed to load vehicles:", error));
+        const token = localStorage.getItem("token");
+        if (!token) {
+            console.warn("Yetkilendirme hatası: Token bulunamadı!");
+            return;
+        }
+
+        axios.get("https://localhost:7172/api/vehicle/active", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                console.log("Mevcut araçlar:", response.data);
+                setVehicles(response.data);
+            })
+            .catch(error => console.error("Araçları yükleme başarısız:", error));
     };
 
     const generateRandomPlate = () => {
@@ -33,44 +48,77 @@ const Home = () => {
         setShowForm(true);
     };
 
-    const handleSubmit = () => {
-        if (!ownerName || !apartmentNumber) {
-            alert("Lutfen daire no giriniz.");
+    const handleSubmit = async () => {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            console.error(" Yetkilendirme hatası: Token bulunamadı!");
+         
             return;
         }
 
-        const newVehicle = {
-            licensePlate,
-            ownerName,
-            apartmentNumber,
-            entryTime: new Date().toISOString(),
-            isGuest: false
-        };
+        try {
+            const response = await axios.post(
+                "https://localhost:7172/api/vehicle",
+                {
+                    licensePlate,
+                    ownerName,
+                    apartmentNumber
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
 
-        axios.post("https://localhost:7172/api/vehicle", newVehicle)
-            .then(() => {
-                alert("Giris Basariyla Yapildi!");
-                setShowForm(false);
-                setOwnerName("");
-                setApartmentNumber("");
-                fetchVehicles();
-            })
-            .catch(error => console.error("Giris yapilamadi:", error));
+            console.log(" Araç eklendi:", response.data);
+           
+            alert("Giris Basariyla Yapildi!");
+
+            // **Formu temizle**
+            setLicensePlate("");
+            setOwnerName("");
+            setApartmentNumber("");
+
+        } catch (error) {
+            console.error(" Araç eklenirken hata oluştu:", error);
+           
+        }
     };
 
-    // EXIT butonu: rastgele bir arac�n ��k���n� ger�ekle�tirir.
+
+    // **EXIT butonu: Rastgele bir aracın çıkışını gerçekleştirir.**
     const handleExitClick = () => {
         if (vehicles.length === 0) {
-            alert("No vehicles in the parking lot.");
+            alert("Otoparkta çıkış yapacak araç bulunmuyor!");
             return;
         }
+
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Yetkilendirme hatası: Lütfen giriş yapın.");
+            return;
+        }
+
         const randomVehicle = vehicles[Math.floor(Math.random() * vehicles.length)];
-        axios.put(`https://localhost:7172/api/vehicle/${randomVehicle.id}/exit`)
+
+        axios.put(`https://localhost:7172/api/vehicle/${randomVehicle.id}/exit`, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then(() => {
-                alert(`Vehicle ${randomVehicle.licensePlate} Cikis Yapildi!`);
+                alert(`Araç ${randomVehicle.licensePlate} çıkış yaptı!`);
+                
+
+                // **Araç listesini güncelle**
                 fetchVehicles();
             })
-            .catch(error => console.error("Exit failed:", error));
+            .catch(error => {
+                console.error("Çıkış işlemi başarısız:", error);
+                
+            });
     };
 
     return (

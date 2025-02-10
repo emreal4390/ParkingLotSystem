@@ -4,16 +4,36 @@ import "../index.css";
 
 const CurrentVehicles = () => {
     const [vehicles, setVehicles] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get("https://localhost:7172/api/vehicle/active")
-            .then(response => setVehicles(response.data))
-            .catch(error => console.error("Failed to load vehicles:", error));
-    }, []);
+        const token = localStorage.getItem("token");
 
+        if (!token) {
+            setError("Yetkilendirme hatasý: Kullanýcý giriþ yapmamýþ!");
+            return;
+        }
+
+        axios.get("https://localhost:7172/api/vehicle/active", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                setVehicles(response.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error("API Hatasý:", error);
+                setError("API'ye eriþim hatasý!");
+                setLoading(false);
+            });
+    }, []);
     return (
         <div>
-            
+            {loading && <p>Veriler yükleniyor...</p>}
+            {error && <p style={{ color: "red" }}>{error}</p>}
             <table>
                 <thead>
                     <tr>

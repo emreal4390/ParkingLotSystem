@@ -3,11 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using ParkingLotSystem.Data;
 //using ParkingLotSystem.Server.Data;
 using ParkingLotSystem.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ParkingLotSystem.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     public class VehicleController : ControllerBase
     {
         private readonly ParkingLotSystemDbContext _context;
@@ -19,6 +22,8 @@ namespace ParkingLotSystem.Server.Controllers
 
         // Otoparktaki güncel araçları listeleme
         [HttpGet("active")]
+        [Authorize]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<IEnumerable<Vehicle>>> GetActiveVehicles()
         {
             return await _context.Vehicles
@@ -28,6 +33,8 @@ namespace ParkingLotSystem.Server.Controllers
 
         // Son 1 aylık geçmiş kayıtları listeleme
         [HttpGet("history")]
+        [Authorize]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<IEnumerable<Vehicle>>> GetVehicleHistory()
         {
             var oneMonthAgo = DateTime.UtcNow.AddMonths(-1);
@@ -37,6 +44,8 @@ namespace ParkingLotSystem.Server.Controllers
         }
 
         // Yeni araç girişi ekleme
+        [Authorize]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpPost]
         public async Task<ActionResult<Vehicle>> AddVehicle(Vehicle vehicle)
         {
@@ -46,11 +55,27 @@ namespace ParkingLotSystem.Server.Controllers
             return CreatedAtAction(nameof(GetActiveVehicles), new { id = vehicle.Id }, vehicle);
         }
 
-      
+        [Authorize]
+        [Authorize(Roles = "SuperAdmin")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteVehicle(int id)
+        {
+            var vehicle = await _context.Vehicles.FindAsync(id);
+            if (vehicle == null) return NotFound("Araç bulunamadı!");
+
+            _context.Vehicles.Remove(vehicle);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+
+
 
 
         // Araç çıkışını kaydetme
         [HttpPut("{id}/exit")]
+        [Authorize]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<IActionResult> UpdateExitTime(int id)
         {
             var vehicle = await _context.Vehicles.FindAsync(id);

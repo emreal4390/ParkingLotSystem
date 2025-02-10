@@ -1,13 +1,14 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
-import "../index.css"; // CSS dosyanız ile stilleri ekleyelim
+import "../index.css"; 
 
 const LoginPage = ({ setUserRole }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
+    //kullanıcı adı ve şifre apiye gönderilerek doğruma yapılır
     const handleLogin = async () => {
         try {
             console.log("Giriş yapılıyor...", { email, password });
@@ -20,7 +21,7 @@ const LoginPage = ({ setUserRole }) => {
             console.log(" API Yanıtı:", response.data);
 
             if (!response.data || !response.data.token || !response.data.role) {
-                console.error("❌ API'den gelen yanıt eksik:", response.data);
+                console.error(" API'den gelen yanıt eksik:", response.data);
                 return;
             }
 
