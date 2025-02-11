@@ -8,6 +8,9 @@
         public string ApartmentNumber { get; set; }
         public DateTime EntryTime { get; set; } = DateTime.UtcNow;
         public DateTime? ExitTime { get; set; }
-       
+
+        public int SiteId { get; set; }
+        public Site Site { get; set; }
+
     }
 }

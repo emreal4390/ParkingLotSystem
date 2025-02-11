@@ -8,5 +8,8 @@
         public string Password { get; set; }
         public string Role { get; set; }  // "Admin" veya "SüperAdmin"
 
+        public int SiteId { get; set; } 
+        public Site Site { get; set; }
+
     }
 }

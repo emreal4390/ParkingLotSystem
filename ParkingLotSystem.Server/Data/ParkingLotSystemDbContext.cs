@@ -14,5 +14,7 @@ namespace ParkingLotSystem.Data
         // DbSet'ler, veritabanındaki her tabloyu temsil eder.
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Site> Sites { get; set; }
     }
 }

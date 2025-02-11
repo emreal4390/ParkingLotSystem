@@ -12,7 +12,7 @@ using ParkingLotSystem.Data;
 namespace ParkingLotSystem.Server.Migrations
 {
     [DbContext(typeof(ParkingLotSystemDbContext))]
-    [Migration("20250131083950_InitialCreate")]
+    [Migration("20250211104007_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -41,7 +41,7 @@ namespace ParkingLotSystem.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PasswordHash")
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -49,7 +49,12 @@ namespace ParkingLotSystem.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("SiteId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SiteId");
 
                     b.ToTable("Users");
                 });
@@ -72,8 +77,6 @@ namespace ParkingLotSystem.Server.Migrations
                     b.Property<DateTime?>("ExitTime")
                         .HasColumnType("datetime2");
 
-                    
-
                     b.Property<string>("LicensePlate")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -82,9 +85,64 @@ namespace ParkingLotSystem.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("SiteId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("SiteId");
+
                     b.ToTable("Vehicles");
+                });
+
+            modelBuilder.Entity("Site", b =>
+                {
+                    b.Property<int>("SiteID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SiteID"));
+
+                    b.Property<string>("SiteName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SiteSecret")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("SiteID");
+
+                    b.ToTable("Sites");
+                });
+
+            modelBuilder.Entity("ParkingLotSystem.Server.Models.User", b =>
+                {
+                    b.HasOne("Site", "Site")
+                        .WithMany("Users")
+                        .HasForeignKey("SiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Site");
+                });
+
+            modelBuilder.Entity("ParkingLotSystem.Server.Models.Vehicle", b =>
+                {
+                    b.HasOne("Site", "Site")
+                        .WithMany("Vehicles")
+                        .HasForeignKey("SiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Site");
+                });
+
+            modelBuilder.Entity("Site", b =>
+                {
+                    b.Navigation("Users");
+
+                    b.Navigation("Vehicles");
                 });
 #pragma warning restore 612, 618
         }
