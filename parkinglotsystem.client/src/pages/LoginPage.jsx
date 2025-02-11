@@ -6,7 +6,7 @@ import "../index.css";
 const LoginPage = ({ setUserRole }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+   
 
     //kullanıcı adı ve şifre apiye gönderilerek doğruma yapılır
     const handleLogin = async () => {
@@ -18,33 +18,37 @@ const LoginPage = ({ setUserRole }) => {
                 password
             });
 
-            console.log(" API Yanıtı:", response.data);
+            console.log("API Yanıtı:", response.data);
 
-            if (!response.data || !response.data.token || !response.data.role) {
-                console.error(" API'den gelen yanıt eksik:", response.data);
+            if (!response.data || !response.data.token || !response.data.role || response.data.siteID === undefined) {
+                console.error("API'den gelen yanıt eksik:", response.data);
+                alert("Yetkilendirme hatası! API'den eksik yanıt geldi.");
                 return;
             }
 
-            
+            // LocalStorage içine kaydet
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("role", response.data.role);
+            localStorage.setItem("siteID", response.data.siteID); //  Kullanıcının SiteID'sini kaydet
 
-            console.log(" localStorage'a Kaydedildi: Token:", localStorage.getItem("token"));
-            console.log(" localStorage'a Kaydedildi: Role:", localStorage.getItem("role"));
+            console.log("localStorage'a Kaydedildi: Token:", response.data.token);
+            console.log("localStorage'a Kaydedildi: Role:", response.data.role);
+            console.log("localStorage'a Kaydedildi: SiteID:", response.data.siteID);
 
             setUserRole(response.data.role);
             window.location.href = "/";
         } catch (err) {
-            console.error(" Giriş hatası:", err.response?.data || err);
-            setError(err.response?.data || "hatalı mail ya da şifre");
+            console.error("Giriş hatası:", err.response?.data || err);
+            alert("Hatalı e-posta veya şifre!");
         }
     };
+
 
     return (
         <div className="login-container">
             <div className="login-box">
                 <h2>Giriş Yap</h2>
-                {error && <p className="error">{error}</p>}
+               
                 <input
                     type="email"
                     placeholder="E-posta adresi"

@@ -50,10 +50,11 @@ const Home = () => {
 
     const handleSubmit = async () => {
         const token = localStorage.getItem("token");
+        const siteID = localStorage.getItem("siteID"); // 🔥 Kullanıcının SiteID'sini al
 
-        if (!token) {
-            console.error(" Yetkilendirme hatası: Token bulunamadı!");
-         
+        if (!token || !siteID) {
+            console.error("Yetkilendirme hatası: Token veya SiteID eksik!");
+            alert("Yetkilendirme hatası! Lütfen tekrar giriş yapın.");
             return;
         }
 
@@ -63,29 +64,30 @@ const Home = () => {
                 {
                     licensePlate,
                     ownerName,
-                    apartmentNumber
+                    apartmentNumber,
+                   
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
                     }
                 }
             );
 
-            console.log(" Araç eklendi:", response.data);
-           
-            alert("Giris Basariyla Yapildi!");
+            console.log("Araç eklendi:", response.data);
+            alert("Araç başarıyla eklendi!");
 
             // **Formu temizle**
             setLicensePlate("");
             setOwnerName("");
             setApartmentNumber("");
-
         } catch (error) {
-            console.error(" Araç eklenirken hata oluştu:", error);
-           
+            console.error("Araç eklenirken hata oluştu:", error);
+            alert("Araç eklenirken hata oluştu!");
         }
     };
+
 
 
     // **EXIT butonu: Rastgele bir aracın çıkışını gerçekleştirir.**

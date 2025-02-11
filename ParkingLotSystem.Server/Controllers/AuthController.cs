@@ -38,38 +38,42 @@ namespace ParkingLotSystem.Server.Controllers
             }
 
             var token = GenerateJwtToken(user);  //giriş başarılı olursa jwt token oluşturulur. bu token front-end e gönderilerek kullanıcının kimliği doğrulanır.
-            return Ok(new { token = token, role = user.Role });
+            Console.WriteLine($" Kullanıcının SiteID'si: {user.SiteID}");
+            return Ok(new { token = token, role = user.Role,siteID=user.SiteID });
 
         }
 
         //   JWT Token üretme metodu
         private string GenerateJwtToken(User user)
         {
-            var keyString = _configuration["Jwt:Key"];  //appsettings.json dosyasından JWT:key alınır. bu anahtar token i imzalamak için kullanılır
+            var keyString = _configuration["Jwt:Key"];
             if (string.IsNullOrEmpty(keyString))
             {
                 throw new Exception("JWT Key is missing in appsettings.json!");
             }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);  //token sha256 ile imzalanır
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
         new Claim(ClaimTypes.Name, user.FullName),
         new Claim(ClaimTypes.Email, user.Email),
-        new Claim(ClaimTypes.Role, user.Role)  //bu bilgiler localStorage içine kaydedilir.
+        new Claim(ClaimTypes.Role, user.Role),
+        new Claim("SiteID", user.SiteID.ToString()) // 🔥 SiteID token içine eklendi
     };
 
             var token = new JwtSecurityToken(
                 _configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
                 claims,
-                expires: DateTime.UtcNow.AddHours(2),  //jwt token'in süresi 2 saat sonra dolar e kullanıcıdan yeniden giriş yapması istenir.
+                expires: DateTime.UtcNow.AddHours(2),
                 signingCredentials: creds
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+
+
         }
 
     }

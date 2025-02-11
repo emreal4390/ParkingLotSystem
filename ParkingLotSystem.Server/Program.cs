@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ParkingLotSystem.Data;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// CORS ayarlar�n� ekle
+// CORS ayarlarını ekle
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
@@ -20,11 +21,11 @@ builder.Services.AddCors(options =>
                         .AllowCredentials());
 });
 
-// Veritaban� ba�lant�s�n� ekle
+// Veritabanı bağlantısını ekle
 builder.Services.AddDbContext<ParkingLotSystemDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// JWT Authentication ekleyelim
+// ✅ **JWT Authentication ekleyelim**
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -40,17 +41,48 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// ✅ **Swagger Konfigürasyonu - JWT Yetkilendirme Ekleyelim**
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Parking Lot API", Version = "v1" });
+
+    // 🔥 Swagger'a JWT Auth ekleme
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "JWT Token'ınızı girin. Örnek: Bearer {token}"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Middleware ekleyelim
+// ✅ Middleware ekleyelim
 app.UseCors("AllowReactApp");
 
-app.UseAuthentication();  // Kullan�c� kimlik do�rulamas�
-app.UseAuthorization();   // Yetkilendirme kontrolleri
+app.UseAuthentication();  // 🔥 Kullanıcı kimlik doğrulaması
+app.UseAuthorization();   // 🔥 Yetkilendirme kontrolleri
 
 app.UseDefaultFiles();
 app.UseStaticFiles();

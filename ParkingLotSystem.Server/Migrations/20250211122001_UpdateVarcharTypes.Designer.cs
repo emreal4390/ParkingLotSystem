@@ -12,8 +12,8 @@ using ParkingLotSystem.Data;
 namespace ParkingLotSystem.Server.Migrations
 {
     [DbContext(typeof(ParkingLotSystemDbContext))]
-    [Migration("20250211104007_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250211122001_UpdateVarcharTypes")]
+    partial class UpdateVarcharTypes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,26 +35,30 @@ namespace ParkingLotSystem.Server.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(60)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(32)");
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(20)");
 
-                    b.Property<int>("SiteId")
+                    b.Property<int>("SiteID")
                         .HasColumnType("int");
+
+                    b.Property<string>("SiteSecret")
+                        .IsRequired()
+                        .HasColumnType("varchar(36)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SiteId");
+                    b.HasIndex("SiteID");
 
                     b.ToTable("Users");
                 });
@@ -69,7 +73,7 @@ namespace ParkingLotSystem.Server.Migrations
 
                     b.Property<string>("ApartmentNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(20)");
 
                     b.Property<DateTime>("EntryTime")
                         .HasColumnType("datetime2");
@@ -79,18 +83,18 @@ namespace ParkingLotSystem.Server.Migrations
 
                     b.Property<string>("LicensePlate")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("OwnerName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(60)");
 
-                    b.Property<int>("SiteId")
+                    b.Property<int>("SiteID")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SiteId");
+                    b.HasIndex("SiteID");
 
                     b.ToTable("Vehicles");
                 });
@@ -105,11 +109,11 @@ namespace ParkingLotSystem.Server.Migrations
 
                     b.Property<string>("SiteName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("SiteSecret")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(36)");
 
                     b.HasKey("SiteID");
 
@@ -120,7 +124,7 @@ namespace ParkingLotSystem.Server.Migrations
                 {
                     b.HasOne("Site", "Site")
                         .WithMany("Users")
-                        .HasForeignKey("SiteId")
+                        .HasForeignKey("SiteID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -131,7 +135,7 @@ namespace ParkingLotSystem.Server.Migrations
                 {
                     b.HasOne("Site", "Site")
                         .WithMany("Vehicles")
-                        .HasForeignKey("SiteId")
+                        .HasForeignKey("SiteID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -4,6 +4,7 @@ using ParkingLotSystem.Data;
 //using ParkingLotSystem.Server.Data;
 using ParkingLotSystem.Server.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace ParkingLotSystem.Server.Controllers
 {
@@ -49,10 +50,45 @@ namespace ParkingLotSystem.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Vehicle>> AddVehicle(Vehicle vehicle)
         {
-            vehicle.EntryTime = DateTime.UtcNow.AddHours(3); ;
+            var userSiteId = GetUserSiteIdFromToken(); //  Token'dan SiteID çekiyoruz
+            if (userSiteId == null)
+            {
+                return Unauthorized("Yetkilendirme hatası: Site bilgisi eksik!");
+            }
+
+            vehicle.SiteID = userSiteId.Value; //  Kullanıcının SiteID'sini araca atıyoruz
+            vehicle.EntryTime = DateTime.UtcNow.AddHours(3);
+
             _context.Vehicles.Add(vehicle);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetActiveVehicles), new { id = vehicle.Id }, vehicle);
+        }
+
+        [Authorize]
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        private int? GetUserSiteIdFromToken()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity == null) return null;
+
+            var siteIdClaim = identity.FindFirst("SiteID");
+
+            if (siteIdClaim == null)
+            {
+                Console.WriteLine("🔥 SiteID bulunamadı! Token içinde eksik olabilir.");
+                return null;
+            }
+
+            bool isValid = int.TryParse(siteIdClaim.Value, out int siteId);
+
+            if (!isValid)
+            {
+                Console.WriteLine($"🔥 SiteID geçersiz formatta: {siteIdClaim.Value}");
+                return null;
+            }
+
+            Console.WriteLine($"✅ SiteID bulundu: {siteId}");
+            return siteId;
         }
 
         [Authorize]
