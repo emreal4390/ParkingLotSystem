@@ -40,35 +40,6 @@ namespace ParkingLotSystem.Server.Controllers
             return CreatedAtAction(nameof(GetAllSites), new { id = site.SiteID }, site);
         }
 
-        //  Kullanıcının Kendi Sitesini Görmesi (Admin & SuperAdmin)
-        //[HttpGet("mysite")]
-        //[Authorize]
-        //public async Task<ActionResult<Site>> GetMySite()
-        //{
-        //    var userSiteId = GetUserSiteIdFromToken();
-        //    if (userSiteId == null)
-        //    {
-        //        return Unauthorized("Yetkilendirme hatası! Site bilgisi eksik.");
-        //    }
-
-        //    var site = await _context.Sites.FindAsync(userSiteId);
-        //    if (site == null)
-        //    {
-        //        return NotFound("Site bulunamadı!");
-        //    }
-
-        //    return site;
-        //}
-
-        //  Kullanıcının SiteID Bilgisini Token'dan Alma
-        //private string GetUserSiteIdFromToken()
-        //{
-        //    var identity = HttpContext.User.Identity as ClaimsIdentity;
-        //    if (identity == null)
-        //        return null;
-
-        //    var siteIdClaim = identity.FindFirst("SiteID");
-        //    return siteIdClaim?.Value; // SiteID artık string olarak dönecek
-        //}
+        
     }
 }

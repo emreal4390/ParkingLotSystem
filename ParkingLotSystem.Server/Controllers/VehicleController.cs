@@ -27,8 +27,9 @@ namespace ParkingLotSystem.Server.Controllers
         [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<IEnumerable<Vehicle>>> GetActiveVehicles()
         {
+            var userSiteId=GetUserSiteIdFromToken();
             return await _context.Vehicles
-                .Where(v => v.ExitTime == null)
+                .Where(v => v.ExitTime == null && v.SiteID==userSiteId)
                 .ToListAsync();
         }
 
@@ -38,9 +39,10 @@ namespace ParkingLotSystem.Server.Controllers
         [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<IEnumerable<Vehicle>>> GetVehicleHistory()
         {
+            var userSiteId=GetUserSiteIdFromToken();
             var oneMonthAgo = DateTime.UtcNow.AddMonths(-1);
             return await _context.Vehicles
-                .Where(v => v.EntryTime >= oneMonthAgo)
+                .Where(v => v.EntryTime >= oneMonthAgo&& v.SiteID==userSiteId)
                 .ToListAsync();
         }
 
@@ -75,7 +77,7 @@ namespace ParkingLotSystem.Server.Controllers
 
             if (siteIdClaim == null)
             {
-                Console.WriteLine("🔥 SiteID bulunamadı! Token içinde eksik olabilir.");
+                Console.WriteLine(" SiteID bulunamadı! Token içinde eksik olabilir.");
                 return null;
             }
 
@@ -83,11 +85,11 @@ namespace ParkingLotSystem.Server.Controllers
 
             if (!isValid)
             {
-                Console.WriteLine($"🔥 SiteID geçersiz formatta: {siteIdClaim.Value}");
+                Console.WriteLine($" SiteID geçersiz formatta: {siteIdClaim.Value}");
                 return null;
             }
 
-            Console.WriteLine($"✅ SiteID bulundu: {siteId}");
+            Console.WriteLine($" SiteID bulundu: {siteId}");
             return siteId;
         }
 
@@ -132,27 +134,32 @@ namespace ParkingLotSystem.Server.Controllers
     [FromQuery] int? minDuration,
     [FromQuery] int? maxDuration)
         {
-            var vehicles = _context.Vehicles.AsQueryable();
+            var userSiteId = GetUserSiteIdFromToken();
+            var vehicles = _context.Vehicles
+                .Where(v => v.SiteID == userSiteId)  // Bu şekilde kullanıcının siteID si kontrol edilerek sadece o siteye ait araçlardan filtreleme yapılır
+                .AsQueryable();
+
+            
 
             if (!string.IsNullOrEmpty(plate))
                 vehicles = vehicles.Where(v => v.LicensePlate.Contains(plate));
 
             if (!string.IsNullOrEmpty(ownerName))
-                vehicles = vehicles.Where(v => v.OwnerName.Contains(ownerName));
+                vehicles = vehicles.Where(v => v.OwnerName.Contains(ownerName) );
 
             if (!string.IsNullOrEmpty(apartmentNo))
                 vehicles = vehicles.Where(v => v.ApartmentNumber.Contains(apartmentNo));
 
             if (dateFrom.HasValue && dateTo.HasValue)
-                vehicles = vehicles.Where(v => v.EntryTime >= dateFrom && v.ExitTime <= dateTo);
+                vehicles = vehicles.Where(v => v.EntryTime >= dateFrom && v.ExitTime <= dateTo );
 
             if (minDuration.HasValue)
                 vehicles = vehicles.Where(v => v.ExitTime != null &&
-                    (EF.Functions.DateDiffMinute(v.EntryTime, v.ExitTime) >= minDuration));
+                    (EF.Functions.DateDiffMinute(v.EntryTime, v.ExitTime) >= minDuration) );
 
             if (maxDuration.HasValue)
                 vehicles = vehicles.Where(v => v.ExitTime != null &&
-                    (EF.Functions.DateDiffMinute(v.EntryTime, v.ExitTime) <= maxDuration));
+                    (EF.Functions.DateDiffMinute(v.EntryTime, v.ExitTime) <= maxDuration) );
 
             return Ok(vehicles.ToList());
         }
